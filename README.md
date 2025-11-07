@@ -209,10 +209,16 @@ if (error) return error
 
 Custom permission middleware that allows you to implement custom permission checking logic. Useful for resource-based permissions (e.g., ownership checks, state-based permissions).
 
+The checker function receives `session`, `context`, and `request` as parameters, allowing you to:
+- Check permissions based on session
+- Access resources from context
+- Read request body or headers if needed
+
 ```typescript
 import { withCustomPermission, checkPermission, checkOwnership, checkResourceState } from "@raburski/next-auth-permissions/server"
 import { Permission } from "@/lib/permissions"
 
+// Simple example - no request body needed
 const withBuildingEditPermission = withCustomPermission(
 	async (session, context) => {
 		const building = context.resource as Building
@@ -227,6 +233,31 @@ const withBuildingEditPermission = withCustomPermission(
 	},
 	{
 		errorMessage: "You don't have permission to edit this building",
+	}
+)
+
+// Advanced example - with request body access
+const withBuildingStatusChangePermission = withCustomPermission(
+	async (session, context, request) => {
+		const building = context.resource as Building
+		if (!building) return false
+
+		const hasApprovePermission = checkPermission(session, Permission.BUILDINGS_APPROVE)
+		if (hasApprovePermission) return true
+
+		// Read request body to check target status
+		// Note: The request is already cloned by withCustomPermission, safe to read
+		const body = await request.json()
+		const targetStatus = body.status
+
+		const isOwner = checkOwnership(building, session)
+		const isDraft = checkResourceState(building, b => b.status === BuildingStatus.DRAFT)
+		const isSubmittingDraft = isDraft && targetStatus === BuildingStatus.SUBMITTED
+
+		return isOwner && isSubmittingDraft
+	},
+	{
+		errorMessage: "You don't have permission to change this building's status",
 	}
 )
 

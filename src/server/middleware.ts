@@ -61,7 +61,7 @@ export function withPermission<Permission extends string>(
 
 /**
  * Custom permission middleware - allows custom permission checking logic
- * The checker function receives the session and context, and should return
+ * The checker function receives the session, context, and request, and should return
  * true if access is allowed, false otherwise.
  * 
  * @example
@@ -75,11 +75,30 @@ export function withPermission<Permission extends string>(
  *   }
  * )
  * ```
+ * 
+ * @example
+ * ```typescript
+ * // With request body access
+ * // Note: The request passed to checker is already cloned, so you can safely read the body
+ * const withBuildingStatusChangePermission = withCustomPermission(
+ *   async (session, context, request) => {
+ *     const building = context.resource as Building
+ *     const body = await request.json()  // Safe to read - request is already cloned
+ *     const targetStatus = body.status
+ *     
+ *     return checkPermission(session, Permission.BUILDINGS_APPROVE) ||
+ *            (checkOwnership(building, session) && 
+ *             checkResourceState(building, b => b.status === BuildingStatus.DRAFT) &&
+ *             targetStatus === BuildingStatus.SUBMITTED)
+ *   }
+ * )
+ * ```
  */
 export function withCustomPermission(
 	checker: (
 		session: SessionWithRole,
-		context: APIContext
+		context: APIContext,
+		request: NextRequest
 	) => boolean | Promise<boolean>,
 	options?: {
 		errorMessage?: string
@@ -100,7 +119,11 @@ export function withCustomPermission(
 				)
 			}
 
-			const canAccess = await checker(session, context)
+			// Clone request before passing to checker to avoid consuming the body
+			// The handler can still read the original request body
+			// Cast to NextRequest since clone() returns Request but we know it's from NextRequest
+			const clonedRequest = request.clone() as NextRequest
+			const canAccess = await checker(session, context, clonedRequest)
 			if (!canAccess) {
 				return NextResponse.json(
 					{ message: options?.errorMessage || "Insufficient permissions" },

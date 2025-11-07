@@ -1,6 +1,6 @@
 {
 	"name": "@raburski/next-auth-permissions",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "A generic permission system for Next.js applications using NextAuth.js",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
