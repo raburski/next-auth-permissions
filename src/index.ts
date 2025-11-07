@@ -18,11 +18,11 @@ export {
 } from "./client"
 export type { PermissionsProviderProps, PermissionsContextValue } from "./client"
 
-// Types
+// Re-export types from next-api-middleware
+export type { APIContext, APIHandler, Middleware } from "@raburski/next-api-middleware"
+
+// Permission-specific types
 export type {
-	APIContext,
-	APIHandler,
-	Middleware,
 	PermissionConfig,
 	SessionWithRole,
 } from "./types"

@@ -1,6 +1,7 @@
 import "server-only"
 import { NextRequest, NextResponse } from "next/server"
-import { APIHandler, APIContext, Middleware, SessionWithRole } from "../types"
+import { APIHandler, APIContext, Middleware } from "@raburski/next-api-middleware"
+import { SessionWithRole } from "../types"
 import { requireAuth, requireUserCan } from "./authUtils"
 
 /**
