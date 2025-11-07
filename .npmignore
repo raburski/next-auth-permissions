@@ -1,0 +1,15 @@
+src/
+tsconfig.json
+*.tsbuildinfo
+node_modules/
+.git/
+.gitignore
+.DS_Store
+.env
+.env.local
+*.log
+README.md
+MIGRATION.md
+PROPOSAL.md
+SERVER_IMPROVEMENT_PROPOSAL.md
+CUSTOM_PERMISSIONS_PROPOSAL.md

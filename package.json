@@ -1,0 +1,59 @@
+{
+	"name": "@raburski/next-auth-permissions",
+	"version": "0.1.0",
+	"description": "A generic permission system for Next.js applications using NextAuth.js",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		},
+		"./server": {
+			"import": "./dist/server/index.js",
+			"types": "./dist/server/index.d.ts"
+		},
+		"./client": {
+			"import": "./dist/client/index.js",
+			"types": "./dist/client/index.d.ts"
+		}
+	},
+	"scripts": {
+		"build": "tsc",
+		"typecheck": "tsc --noEmit"
+	},
+	"keywords": [
+		"nextjs",
+		"next-auth",
+		"permissions",
+		"authorization",
+		"rbac",
+		"middleware"
+	],
+	"author": "",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/raburski/next-auth-permissions.git"
+	},
+	"bugs": {
+		"url": "https://github.com/raburski/next-auth-permissions/issues"
+	},
+	"homepage": "https://github.com/raburski/next-auth-permissions#readme",
+	"peerDependencies": {
+		"next": "^14.0.0 || ^15.0.0",
+		"next-auth": "^5.0.0-beta.0",
+		"react": "^18.0.0 || ^19.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.0.0",
+		"@types/react": "^18.0.0 || ^19.0.0",
+		"typescript": "^5.0.0"
+	},
+	"files": [
+		"dist",
+		"README.md"
+	]
+}
+
