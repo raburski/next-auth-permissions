@@ -246,7 +246,8 @@ const withBuildingStatusChangePermission = withCustomPermission(
 		if (hasApprovePermission) return true
 
 		// Read request body to check target status
-		// Note: The request is already cloned by withCustomPermission, safe to read
+		// Note: The request passed to checker is already cloned by withCustomPermission,
+		// so you can safely read the body without breaking subsequent middleware/handlers
 		const body = await request.json()
 		const targetStatus = body.status
 
